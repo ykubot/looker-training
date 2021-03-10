@@ -1,4 +1,8 @@
 connection: "snowlooker"
+datagroup: default {
+  sql_trigger: select current_date ;;
+  max_cache_age: "24 hours"
+}
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
@@ -20,5 +24,11 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # }
 
 explore: users {
+  persist_with: default
+  join: order_items {
+    type: left_outer
+    sql_on: ${users.id} = ${order_items.user_id} ;;
+    relationship: one_to_many
+  }
 
 }
